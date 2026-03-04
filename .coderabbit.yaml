@@ -1,0 +1,71 @@
+# CodeRabbit Configuration
+# Docs: https://docs.coderabbit.ai/getting-started/configure-coderabbit
+
+language: "en-US"
+
+# Review settings
+reviews:
+  # Auto-review all PRs
+  auto_review:
+    enabled: true
+    drafts: false  # Don't review draft PRs
+    base_branches:
+      - main
+      - develop
+
+  # What CodeRabbit will focus on
+  profile: "chill"  # Options: chill | assertive
+  # "chill"     → reviews correctness and major issues only
+  # "assertive" → also flags style, docs, minor improvements
+
+  # Request changes if critical issues found
+  request_changes_workflow: false
+
+  # Post a high-level summary of the PR
+  high_level_summary: true
+
+  # Post a poem at the end of reviews (fun!)
+  poem: true
+
+  # Auto-review when a label is applied
+  # label_instructions:
+  #   - label: "ready-for-review"
+  #     instructions: "Focus on security and performance."
+
+# Path-specific instructions for the AI reviewer
+path_instructions:
+  - path: "app/**/*.py"
+    instructions: |
+      Review FastAPI code for:
+      - Correct use of Pydantic models and validation
+      - Proper HTTP status codes
+      - Missing error handling (e.g., unhandled exceptions)
+      - Security issues (e.g., unvalidated inputs, open redirects)
+      - Performance anti-patterns
+
+  - path: "tests/**/*.py"
+    instructions: |
+      Review tests for:
+      - Missing edge cases (e.g., empty inputs, boundary values)
+      - Tests that don't assert enough
+      - Fixtures that could be shared or improved
+      - Ensure each endpoint has at least a happy-path and error-path test
+
+  - path: ".github/workflows/*.yml"
+    instructions: |
+      Review GitHub Actions workflows for:
+      - Use of pinned action versions (e.g., @v4 not @main)
+      - Secrets not hardcoded in workflow files
+      - Missing timeout-minutes on jobs
+      - Unnecessary steps that slow down CI
+
+# Files/paths CodeRabbit should ignore entirely
+path_filters:
+  - "!**/*.lock"
+  - "!**/*.xml"
+  - "!**/coverage.xml"
+  - "!.gitignore"
+
+# Chat settings (you can talk to CodeRabbit in PR comments)
+chat:
+  auto_reply: true
