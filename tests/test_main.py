@@ -1,12 +1,14 @@
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app, items, _next_id
+
+from app.main import app
 
 
 @pytest.fixture(autouse=True)
 def clear_items():
     """Reset in-memory store before each test."""
     import app.main as main_module
+
     main_module.items.clear()
     main_module._next_id = 1
     yield
@@ -26,6 +28,7 @@ def sample_item():
 
 # --- Root & Health ---
 
+
 def test_root(client):
     response = client.get("/")
     assert response.status_code == 200
@@ -39,6 +42,7 @@ def test_health_check(client):
 
 
 # --- List Items ---
+
 
 def test_list_items_empty(client):
     response = client.get("/items")
@@ -55,6 +59,7 @@ def test_list_items_with_data(client, sample_item):
 
 
 # --- Create Item ---
+
 
 def test_create_item(client, sample_item):
     response = client.post("/items", json=sample_item)
@@ -84,6 +89,7 @@ def test_create_item_increments_id(client, sample_item):
 
 # --- Get Item ---
 
+
 def test_get_item(client, sample_item):
     client.post("/items", json=sample_item)
     response = client.get("/items/1")
@@ -98,6 +104,7 @@ def test_get_item_not_found(client):
 
 
 # --- Update Item ---
+
 
 def test_update_item(client, sample_item):
     client.post("/items", json=sample_item)
@@ -114,6 +121,7 @@ def test_update_item_not_found(client, sample_item):
 
 
 # --- Delete Item ---
+
 
 def test_delete_item(client, sample_item):
     client.post("/items", json=sample_item)

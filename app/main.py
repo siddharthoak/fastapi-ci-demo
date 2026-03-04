@@ -1,8 +1,9 @@
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Optional
 
 app = FastAPI(title="CI Demo API", version="1.0.0")
+
 
 # In-memory store (for demo purposes)
 items: dict[int, dict] = {}
@@ -11,7 +12,7 @@ _next_id = 1
 
 class Item(BaseModel):
     name: str
-    description: Optional[str] = None
+    description: str | None = None
     price: float
     in_stock: bool = True
 
